@@ -22,12 +22,14 @@
     "test": "node_modules/.bin/gulp ci"
   },
   "dependencies": {
+    "bluebird": "2.9.x",
+    "lodash": "3.7.x"
   },
   "engines": {
     "node": ">=0.10.0"
   },
   "devDependencies": {
-    "chai": "2.2.x",
+    "chai": "2.3.x",
     "chalk": "1.0.x",
     "gulp": "3.8.x",
     "gulp-coveralls": "0.1.x",
@@ -36,6 +38,7 @@
     "gulp-mocha": "2.0.x",
     "jshint-stylish": "1.0.x",
     "rimraf": "2.3.x",
-    "run-sequence": "1.0.x"
+    "run-sequence": "1.1.x",
+    "sinon": "1.14.x"
   }
 }
