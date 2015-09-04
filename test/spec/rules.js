@@ -1,6 +1,6 @@
 'use strict';
 
-var Quota = require('../../lib/index.js').Quota;
+var quota = require('../../lib/index.js');
 
 var _ = require('lodash');
 
@@ -11,19 +11,17 @@ describe('Rules', function () {
 
         it('cutoff throttling, no backoff', function (done) {
 
-            var quota = new Quota({
+            var q = quota({
                 cancelAfter: 1000,
                 throttling: 'cutoff',
                 backoff: 'none'
             });
 
-            quota.addRule({
+            q.addRule({
                 slots: 10,
                 every: 1000,
-                queue: {
-                    type: 'memory',
-                    scopeAttr: []
-                }
+                queueing: 'none',
+                scopeAttr: []
             });
 
             var deliveredSlots = 0;
@@ -33,7 +31,7 @@ describe('Rules', function () {
             }
 
             _.times(11, function () {
-                quota.requestSlot()
+                q.requestSlot()
                     .then(slotDelivered);
             });
 
@@ -55,7 +53,7 @@ describe('Rules', function () {
                 //
                 //clock.tick(100);
                 //
-                //quota.requestSlot()
+                //q.requestSlot()
                 //    .then(function () {
                 //        done();
                 //    });
