@@ -4,7 +4,10 @@
   "description": "Sophisticated, general-purpose quota management",
   "keywords": [
     "quota",
+    "rate",
+    "limit",
     "limits",
+    "throttling",
     "queue"
   ],
   "homepage": "https://github.com/analog-nico/quota",
@@ -23,6 +26,7 @@
   },
   "dependencies": {
     "bluebird": "2.9.x",
+    "double-ended-queue": "2.1.x",
     "lodash": "3.7.x"
   },
   "engines": {
