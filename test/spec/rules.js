@@ -13,7 +13,6 @@ describe('Rules', function () {
 
             var q = quota({
                 cancelAfter: 1000,
-                throttling: 'cutoff',
                 backoff: 'none'
             });
 
@@ -21,6 +20,7 @@ describe('Rules', function () {
                 quota: 10,
                 every: 1000,
                 queueing: 'none',
+                throttling: 'cutoff',
                 scope: []
             });
 
