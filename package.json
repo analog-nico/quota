@@ -25,24 +25,24 @@
     "test": "node_modules/.bin/gulp ci"
   },
   "dependencies": {
-    "bluebird": "2.9.x",
-    "double-ended-queue": "2.1.x",
-    "lodash": "3.7.x"
+    "bluebird": "^2.9",
+    "double-ended-queue": "^2.1",
+    "lodash": "^3.10"
   },
   "engines": {
     "node": ">=0.10.0"
   },
   "devDependencies": {
-    "chai": "2.3.x",
-    "chalk": "1.0.x",
-    "gulp": "3.8.x",
+    "chai": "3.2.x",
+    "chalk": "1.1.x",
+    "gulp": "3.9.x",
     "gulp-coveralls": "0.1.x",
-    "gulp-istanbul": "0.8.x",
-    "gulp-jshint": "1.10.x",
-    "gulp-mocha": "2.0.x",
-    "jshint-stylish": "1.0.x",
-    "rimraf": "2.3.x",
+    "gulp-istanbul": "0.10.x",
+    "gulp-jshint": "1.11.x",
+    "gulp-mocha": "2.1.x",
+    "jshint-stylish": "2.0.x",
+    "rimraf": "2.4.x",
     "run-sequence": "1.1.x",
-    "sinon": "1.14.x"
+    "sinon": "1.16.x"
   }
 }
