@@ -21,7 +21,7 @@ describe('Rules', function () {
                 slots: 10,
                 every: 1000,
                 queueing: 'none',
-                scopeAttr: []
+                scope: []
             });
 
             var deliveredSlots = 0;
