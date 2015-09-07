@@ -18,7 +18,7 @@ describe('Rules', function () {
             });
 
             q.addRule({
-                slots: 10,
+                quota: 10,
                 every: 1000,
                 queueing: 'none',
                 scope: []
