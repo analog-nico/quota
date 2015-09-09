@@ -17,10 +17,10 @@ describe('Rules', function () {
             });
 
             q.addRule({
-                quota: 10,
-                every: 1000,
+                limit: 10,
+                window: 1000,
+                throttling: 'window-fixed',
                 queueing: 'none',
-                throttling: 'cutoff',
                 scope: []
             });
 
