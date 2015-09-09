@@ -5,7 +5,7 @@ var quota = require('../../lib/index.js');
 var _ = require('lodash');
 
 
-describe('Rules', function () {
+xdescribe('Rules', function () {
 
     describe('with node instance scope', function () {
 
