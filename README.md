@@ -18,6 +18,29 @@ npm install quota --save
 
 Description forthcoming.
 
+``` js
+var quota = require('quota');
+
+// Create and configure the quota server which manages the quota usage.
+var quotaServer = new quota.Server();
+quotaServer.addQuotaManager('github'); // This is loading one of many presets.
+
+// Create a client connected to the server locally - so no overhead involved.
+var quotaClient = new quota.Client(quotaServer);
+
+// Requesting quota for a single GitHub API call on behalf of the analog-nico user.
+quotaClient.requestQuota('github', { userId: 'analog-nico' })
+	.then(function (grant) {
+		// The quota request was granted. Call the GitHub API now.
+	})
+	.catch(quota.OutOfQuotaError, function (err) {
+		// The quota request was denied. E.g. notify the user to try again later.
+	})
+	.catch(function (err) {
+		// Due to technical reasons the quota request was neither granted nor denied. E.g. notify the admins.
+	});
+```
+
 ## Contributing
 
 To set up your development environment for Quota:
