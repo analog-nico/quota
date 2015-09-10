@@ -1,6 +1,6 @@
 'use strict';
 
-var quota = require('../../../lib/index.js');
+var quota = require('../../../lib/core/index.js');
 
 var _ = require('lodash');
 
