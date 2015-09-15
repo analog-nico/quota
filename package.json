@@ -25,8 +25,8 @@
     "test": "node_modules/.bin/gulp ci"
   },
   "dependencies": {
-    "bluebird": "^2.9",
-    "double-ended-queue": "^2.1",
+    "bluebird": "^2.10",
+    "double-ended-queue": "2.1.0-0",
     "lodash": "^3.10"
   },
   "engines": {
