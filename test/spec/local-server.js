@@ -365,6 +365,57 @@ describe('Local Server', function () {
 
         });
 
+        it('with 2 rules and 2 resources', function () {
+
+            var quotaManager = new quota.Manager();
+            quotaManager.addRule({
+                limit: 1,
+                throttling: 'limit-absolute',
+                resource: 'resA'
+            });
+            quotaManager.addRule({
+                limit: 2,
+                throttling: 'limit-absolute',
+                resource: 'resB'
+            });
+
+            var quotaServer = new quota.Server();
+            quotaServer.addManager('test', quotaManager);
+
+            var quotaClient = new quota.Client(quotaServer);
+
+            return BPromise.resolve()
+                .then(function () {
+                    return quotaClient.requestQuota('test', undefined, { 'resA': 1 });
+                })
+                .then(function () {
+
+                    return quotaClient.requestQuota('test', undefined, { 'resA': 1 })
+                        .then(function () {
+                            throw new Error('Expected OutOfQuotaError');
+                        })
+                        .catch(quota.OutOfQuotaError, function (err) {
+                            return; // Expected
+                        });
+
+                })
+                .then(function () {
+                    return quotaClient.requestQuota('test', undefined, { 'resB': 2 });
+                })
+                .then(function () {
+
+                    return quotaClient.requestQuota('test', undefined, { 'resB': 1 })
+                        .then(function () {
+                            throw new Error('Expected OutOfQuotaError');
+                        })
+                        .catch(quota.OutOfQuotaError, function (err) {
+                            return; // Expected
+                        });
+
+                });
+
+        });
+
     });
 
 });
