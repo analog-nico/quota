@@ -67,6 +67,8 @@ quotaClient.requestQuota('xyzApi', /* ... */ ).then(function (grant) { /* ... */
 
 ### Quota management in a cluster environment (multiple node.js instances)
 
+**This is a preview. Feature not yet implemented.**
+
 E.g. the Google Analytics API puts a limit on the overall requests per day. If you have a cluster environment with e.g. 10-20 dynamically scaled node.js instances which all do Google Analytics API calls the quota has to be managed by a single, centralized Quota server. Therefore the Quota Client supports the connection to a remote Quota Server.
 
 Choose one node.js instance to run the Quota Server:
@@ -103,6 +105,8 @@ quotaClient.requestQuota('google-analytics', /* ... */ ).then(function (grant) {
 ```
 
 ### Quota management in a cluster environment with local and remote Quota Servers
+
+**This is a preview. Feature not yet implemented.** However, a Client can at least connect to multiple local Servers.
 
 If the quota management is done by a remote Quota Server some overhead is introduced by the Client's REST API calls to the Server. By deploying all node.js instances in the same datacenter this overhead is minimal but can be further reduced by only running those Managers on the remote Quota Server that require centralized management. All other Managers can be moved to a local Quota Server:
 
