@@ -444,7 +444,7 @@ describe('Local Server', function () {
                 })
                 .then(function () {
 
-                    return quotaClient.requestQuota('test', undefined, { 'resA': 1 })
+                    return quotaClient.requestQuota('test', undefined, { 'resA': 1, 'resB': 1 })
                         .then(function () {
                             throw new Error('Expected OutOfQuotaError');
                         })
