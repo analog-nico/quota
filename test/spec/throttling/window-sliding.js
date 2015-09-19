@@ -8,7 +8,33 @@ var BPromise = require('bluebird');
 
 describe('Throttling WindowSliding', function () {
 
-    it('should validate the options', function () {
+    it('should validate options.limit', function () {
+
+        var quotaManager = new quota.Manager();
+        quotaManager.addRule({
+            window: 1000,
+            throttling: 'window-sliding'
+        });
+
+        var quotaServer = new quota.Server();
+        quotaServer.addManager('test', quotaManager);
+
+        var quotaClient = new quota.Client(quotaServer);
+
+        return quotaClient.requestQuota('test')
+            .then(function () {
+                throw new Error('Expected an Error');
+            })
+            .catch(quota.OutOfQuotaError, function (err) {
+                throw new Error('Did not expect an OutOfQuotaError');
+            })
+            .catch(function (err) {
+                expect(err.message).to.eql('Please pass the limit parameter to allow window-sliding throttling');
+            });
+
+    });
+
+    it('should validate options.window', function () {
 
         var quotaManager = new quota.Manager();
         quotaManager.addRule({
@@ -29,7 +55,7 @@ describe('Throttling WindowSliding', function () {
                 throw new Error('Did not expect an OutOfQuotaError');
             })
             .catch(function (err) {
-                expect(err.message).to.eql('Please pass the window parameter to allow sliding window throttling');
+                expect(err.message).to.eql('Please pass the window parameter to allow window-sliding throttling');
             });
 
     });
