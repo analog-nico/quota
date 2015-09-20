@@ -470,6 +470,30 @@ describe('Local Server', function () {
 
         });
 
+        it('should not grant request for unknown resource', function () {
+
+            var quotaManager = new quota.Manager();
+            quotaManager.addRule({
+                limit: 1,
+                throttling: 'limit-absolute',
+                resource: 'known'
+            });
+
+            var quotaServer = new quota.Server();
+            quotaServer.addManager('test', quotaManager);
+
+            var quotaClient = new quota.Client(quotaServer);
+
+            return quotaClient.requestQuota('test', undefined, { unknownResource: 1 })
+                .then(function () {
+                    throw new Error('Expected OutOfQuotaError');
+                })
+                .catch(quota.OutOfQuotaError, function (err) {
+                    return; // Expected
+                });
+
+        });
+
     });
 
 });
