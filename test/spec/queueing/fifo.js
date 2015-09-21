@@ -331,6 +331,56 @@ describe('Queueing Fifo', function () {
 
     });
 
-    it('granting second in line after first in line timed out');
+    it('granting second in line after first in line timed out', function () {
+
+        var quotaManager = new quota.Manager();
+        quotaManager.addRule({
+            limit: 2,
+            throttling: 'limit-concurrency',
+            queueing: 'fifo'
+        });
+
+        var quotaServer = new quota.Server();
+        quotaServer.addManager('test', quotaManager);
+
+        var quotaClient = new quota.Client(quotaServer);
+
+        var grant1, counter = 0;
+
+        return BPromise.resolve()
+            .then(function () {
+
+                return quotaClient.requestQuota('test')
+                    .then(function (grant) {
+                        grant1 = grant;
+                    });
+
+            })
+            .then(function () {
+
+                setTimeout(function () {
+                    counter += 1;
+                    grant1.dismiss();
+                }, 10);
+
+                return BPromise.all([
+                    quotaClient.requestQuota('test', undefined, 2, { maxWait: 5 })
+                        .then(function () {
+                            throw new Error('Expected OutOfQuotaError');
+                        })
+                        .catch(quota.OutOfQuotaError, function (err) {
+                            return; // Expected
+                        }),
+                    quotaClient.requestQuota('test')
+                        .then(function (grant) {
+                            counter += 1;
+                            expect(counter).to.eql(1);
+                            grant.dismiss();
+                        })
+                ]);
+
+            });
+
+    });
 
 });
