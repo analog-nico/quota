@@ -52,4 +52,49 @@ describe('Preset Echonest', function () {
 
     });
 
+    it('should grant more requests if limit is increased', function () {
+
+        var quotaServer = new quota.Server();
+        quotaServer.addManager('echonest');
+
+        var quotaClient = new quota.Client(quotaServer);
+
+        return BPromise.resolve()
+            .then(function () {
+
+                return quotaClient.requestQuota('echonest')
+                    .then(function (grant) {
+                        grant.dismiss({
+                            forRule: {
+                                main: {
+                                    limit: 2
+                                }
+                            }
+                        });
+                    });
+
+            })
+            .then(function () {
+
+                return BPromise.all([
+                    quotaClient.requestQuota('echonest')
+                        .then(function (grant) {
+                            grant.dismiss({
+                                forRule: {
+                                    main: {
+                                        limit: 3
+                                    }
+                                }
+                            });
+                        }),
+                    quotaClient.requestQuota('echonest')
+                        .then(function (grant) {
+                            grant.dismiss();
+                        })
+                ]);
+
+            });
+
+    });
+
 });
