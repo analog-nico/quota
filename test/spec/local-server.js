@@ -126,6 +126,41 @@ describe('Local Server', function () {
 
         });
 
+        it('with 1 rule and scope parameter variants', function () {
+
+            var quotaManager = new quota.Manager();
+            quotaManager.addRule({
+                limit: 2,
+                throttling: 'limit-absolute',
+                scope: 'id'
+            });
+
+            var quotaServer = new quota.Server();
+            quotaServer.addManager('test', quotaManager);
+
+            var quotaClient = new quota.Client(quotaServer);
+
+            return BPromise.resolve()
+                .then(function () {
+                    return quotaClient.requestQuota('test', undefined);
+                })
+                .then(function () {
+                    return quotaClient.requestQuota('test', { });
+                })
+                .then(function () {
+
+                    return quotaClient.requestQuota('test', { id: undefined })
+                        .then(function () {
+                            throw new Error('Expected OutOfQuotaError');
+                        })
+                        .catch(quota.OutOfQuotaError, function (err) {
+                            return; // Expected
+                        });
+
+                });
+
+        });
+
         it('with 1 rule and complex scope', function () {
 
             var quotaManager = new quota.Manager();
@@ -491,6 +526,59 @@ describe('Local Server', function () {
                 .catch(quota.OutOfQuotaError, function (err) {
                     return; // Expected
                 });
+
+        });
+
+    });
+
+    describe('with two managers', function () {
+
+        it('should find the right manager', function () {
+
+            var quotaManager1 = new quota.Manager();
+            quotaManager1.addRule({
+                limit: 1,
+                throttling: 'limit-absolute'
+            });
+
+            var quotaManager2 = new quota.Manager();
+            quotaManager2.addRule({
+                limit: 1,
+                throttling: 'limit-absolute'
+            });
+
+            var quotaServer = new quota.Server();
+            quotaServer.addManager('man1', quotaManager1);
+            quotaServer.addManager('man2', quotaManager2);
+
+            var quotaClient = new quota.Client(quotaServer);
+
+            return BPromise.resolve()
+                .then(function () {
+                    return quotaClient.requestQuota('man1');
+                })
+                .then(function () {
+                    return quotaClient.requestQuota('man1')
+                        .then(function () {
+                            throw new Error('Expected OutOfQuotaError');
+                        })
+                        .catch(quota.OutOfQuotaError, function (err) {
+                            return; // Expected
+                        });
+                })
+                .then(function () {
+                    return quotaClient.requestQuota('man2');
+                })
+                .then(function () {
+                    return quotaClient.requestQuota('man2')
+                        .then(function () {
+                            throw new Error('Expected OutOfQuotaError');
+                        })
+                        .catch(quota.OutOfQuotaError, function (err) {
+                            return; // Expected
+                        });
+                });
+
 
         });
 
