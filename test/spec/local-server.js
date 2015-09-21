@@ -505,6 +505,58 @@ describe('Local Server', function () {
 
         });
 
+        it('should limit all resources with a rule that defines none', function () {
+
+            var quotaManager = new quota.Manager();
+            quotaManager.addRule({
+                limit: 2,
+                throttling: 'limit-absolute',
+                resource: 'resA'
+            });
+            quotaManager.addRule({
+                limit: 2,
+                throttling: 'limit-absolute',
+                resource: 'resB'
+            });
+            quotaManager.addRule({
+                limit: 1,
+                throttling: 'limit-absolute'
+            });
+
+            var quotaServer = new quota.Server();
+            quotaServer.addManager('test', quotaManager);
+
+            var quotaClient = new quota.Client(quotaServer);
+
+            return BPromise.resolve()
+                .then(function () {
+                    return quotaClient.requestQuota('test', undefined, { 'resA': 1 });
+                })
+                .then(function () {
+
+                    return quotaClient.requestQuota('test', undefined, { 'resA': 1 })
+                        .then(function () {
+                            throw new Error('Expected OutOfQuotaError');
+                        })
+                        .catch(quota.OutOfQuotaError, function (err) {
+                            return; // Expected
+                        });
+
+                })
+                .then(function () {
+
+                    return quotaClient.requestQuota('test', undefined, { 'resB': 1 })
+                        .then(function () {
+                            throw new Error('Expected OutOfQuotaError');
+                        })
+                        .catch(quota.OutOfQuotaError, function (err) {
+                            return; // Expected
+                        });
+
+                });
+
+        });
+
         it('should not grant request for unknown resource', function () {
 
             var quotaManager = new quota.Manager();
@@ -520,6 +572,30 @@ describe('Local Server', function () {
             var quotaClient = new quota.Client(quotaServer);
 
             return quotaClient.requestQuota('test', undefined, { unknownResource: 1 })
+                .then(function () {
+                    throw new Error('Expected OutOfQuotaError');
+                })
+                .catch(quota.OutOfQuotaError, function (err) {
+                    return; // Expected
+                });
+
+        });
+
+        it('should not grant request for empty resource object', function () {
+
+            var quotaManager = new quota.Manager();
+            quotaManager.addRule({
+                limit: 1,
+                throttling: 'limit-absolute',
+                resource: 'known'
+            });
+
+            var quotaServer = new quota.Server();
+            quotaServer.addManager('test', quotaManager);
+
+            var quotaClient = new quota.Client(quotaServer);
+
+            return quotaClient.requestQuota('test', undefined, { })
                 .then(function () {
                     throw new Error('Expected OutOfQuotaError');
                 })
