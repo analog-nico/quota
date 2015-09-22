@@ -327,6 +327,9 @@ describe('Queueing Fifo', function () {
                         })
                 ]);
 
+            })
+            .finally(function () {
+                console.log(':)');
             });
 
     });
