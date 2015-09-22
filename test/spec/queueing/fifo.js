@@ -303,7 +303,7 @@ describe('Queueing Fifo', function () {
         return BPromise.resolve()
             .then(function () {
 
-                return quotaClient.requestQuota('test', undefined, 2, { maxWait: 10 })
+                return quotaClient.requestQuota('test', { call: 1 }, 2, { maxWait: 10 })
                     .then(function (grant) {
                         return grant;
                     });
@@ -312,13 +312,13 @@ describe('Queueing Fifo', function () {
             .then(function (firstGrant) {
 
                 setTimeout(function () {
-                    firstGrant.dismiss();
+                    firstGrant.dismiss({ call: 1 });
                 });
 
                 return BPromise.all([
-                    quotaClient.requestQuota('test', undefined, undefined, { maxWait: 10 }),
-                    quotaClient.requestQuota('test', undefined, undefined, { maxWait: 10 }),
-                    quotaClient.requestQuota('test', undefined, undefined, { maxWait: 10 })
+                    quotaClient.requestQuota('test', { call: 2 }, undefined, { maxWait: 10 }),
+                    quotaClient.requestQuota('test', { call: 3 }, undefined, { maxWait: 10 }),
+                    quotaClient.requestQuota('test', { call: 4 }, undefined, { maxWait: 10 })
                         .then(function () {
                             throw new Error('Expected OutOfQuotaError');
                         })
