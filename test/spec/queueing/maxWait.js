@@ -137,9 +137,6 @@ describe('Queueing with maxWait', function () {
 
                 setTimeout(function () {
                     counter += 1;
-                }, 7);
-
-                setTimeout(function () {
                     firstGrant.dismiss();
                 }, 10);
 
