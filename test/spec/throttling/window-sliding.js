@@ -106,7 +106,7 @@ describe('Throttling WindowSliding', function () {
         var quotaManager = new quota.Manager();
         quotaManager.addRule({
             limit: 2,
-            window: 20,
+            window: 10,
             throttling: 'window-sliding'
         });
 
@@ -121,7 +121,7 @@ describe('Throttling WindowSliding', function () {
                 return quotaClient.requestQuota('test');
 
             })
-            .delay(10)
+            .delay(5)
             .then(function () {
 
                 return quotaClient.requestQuota('test', undefined, 2)
@@ -138,7 +138,7 @@ describe('Throttling WindowSliding', function () {
                 return quotaClient.requestQuota('test');
 
             })
-            .delay(10)
+            .delay(5)
             .then(function () {
 
                 return quotaClient.requestQuota('test', undefined, 2)
@@ -150,7 +150,7 @@ describe('Throttling WindowSliding', function () {
                     });
 
             })
-            .delay(10)
+            .delay(5)
             .then(function () {
 
                 return quotaClient.requestQuota('test', undefined, 2);
