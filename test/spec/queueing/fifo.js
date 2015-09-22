@@ -334,7 +334,7 @@ describe('Queueing Fifo', function () {
 
     });
 
-    xit('granting second in line after first in line timed out', function () {
+    it('granting second in line after first in line timed out', function () {
 
         var quotaManager = new quota.Manager();
         quotaManager.addRule({
