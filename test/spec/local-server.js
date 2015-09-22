@@ -658,6 +658,59 @@ describe('Local Server', function () {
 
         });
 
+        it('should find the right manager even after the first one got used', function () {
+
+            var quotaManager1 = new quota.Manager();
+            quotaManager1.addRule({
+                limit: 1,
+                throttling: 'limit-absolute'
+            });
+
+            var quotaServer = new quota.Server();
+            quotaServer.addManager('man1', quotaManager1);
+
+            var quotaClient = new quota.Client(quotaServer);
+
+            return BPromise.resolve()
+                .then(function () {
+                    return quotaClient.requestQuota('man1');
+                })
+                .then(function () {
+                    return quotaClient.requestQuota('man1')
+                        .then(function () {
+                            throw new Error('Expected OutOfQuotaError');
+                        })
+                        .catch(quota.OutOfQuotaError, function (err) {
+                            return; // Expected
+                        });
+                })
+                .then(function () {
+
+                    var quotaManager2 = new quota.Manager();
+                    quotaManager2.addRule({
+                        limit: 1,
+                        throttling: 'limit-absolute'
+                    });
+
+                    quotaServer.addManager('man2', quotaManager2);
+
+                })
+                .then(function () {
+                    return quotaClient.requestQuota('man2');
+                })
+                .then(function () {
+                    return quotaClient.requestQuota('man2')
+                        .then(function () {
+                            throw new Error('Expected OutOfQuotaError');
+                        })
+                        .catch(quota.OutOfQuotaError, function (err) {
+                            return; // Expected
+                        });
+                });
+
+
+        });
+
     });
 
 });
