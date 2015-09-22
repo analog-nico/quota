@@ -133,15 +133,15 @@ describe('Queueing with maxWait', function () {
 
                 setTimeout(function () {
                     counter += 1;
-                }, 5);
+                }, 10);
 
                 setTimeout(function () {
                     counter += 1;
-                }, 7);
+                }, 15);
 
                 setTimeout(function () {
                     firstGrant.dismiss();
-                }, 10);
+                }, 20);
 
                 return BPromise.all([
                     quotaClient.requestQuota('test', undefined, undefined, { maxWait: 0 })
@@ -152,7 +152,7 @@ describe('Queueing with maxWait', function () {
                             counter += 1;
                             expect(counter).to.eql(1);
                         }),
-                    quotaClient.requestQuota('test', undefined, undefined, { maxWait: 5 })
+                    quotaClient.requestQuota('test', undefined, undefined, { maxWait: 10 })
                         .then(function () {
                             throw new Error('Expected OutOfQuotaError');
                         })
@@ -160,7 +160,7 @@ describe('Queueing with maxWait', function () {
                             counter += 1;
                             expect(counter).to.eql(3);
                         }),
-                    quotaClient.requestQuota('test', undefined, undefined, { maxWait: 10 })
+                    quotaClient.requestQuota('test', undefined, undefined, { maxWait: 20 })
                         .then(function (grant) {
                             counter += 1;
                             expect(counter).to.eql(5);

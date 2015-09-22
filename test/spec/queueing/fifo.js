@@ -303,7 +303,7 @@ describe('Queueing Fifo', function () {
         return BPromise.resolve()
             .then(function () {
 
-                return quotaClient.requestQuota('test', undefined, 2)
+                return quotaClient.requestQuota('test', undefined, 2, { maxWait: 10 })
                     .then(function (grant) {
                         return grant;
                     });
