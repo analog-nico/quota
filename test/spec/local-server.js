@@ -485,7 +485,7 @@ describe('Local Server', function () {
 
             return BPromise.resolve()
                 .then(function () {
-                    return quotaClient.requestQuota('test', undefined, 1);
+                    return quotaClient.requestQuota('test', undefined, { 'resA': 1, 'resB': 1 });
                 })
                 .then(function () {
                     return quotaClient.requestQuota('test', undefined, { 'resA': 1, 'resB': 3 });
@@ -586,9 +586,9 @@ describe('Local Server', function () {
 
             return quotaClient.requestQuota('test', undefined, { unknownResource: 1 })
                 .then(function () {
-                    throw new Error('Expected OutOfQuotaError');
+                    throw new Error('Expected Error');
                 })
-                .catch(quota.OutOfQuotaError, function (err) {
+                .catch(function (err) {
                     return; // Expected
                 });
 
@@ -610,9 +610,38 @@ describe('Local Server', function () {
 
             return quotaClient.requestQuota('test', undefined, { })
                 .then(function () {
-                    throw new Error('Expected OutOfQuotaError');
+                    throw new Error('Expected Error');
                 })
-                .catch(quota.OutOfQuotaError, function (err) {
+                .catch(function (err) {
+                    return; // Expected
+                });
+
+        });
+
+        it('should not grant request without explicitly selecting from multiple resources', function () {
+
+            var quotaManager = new quota.Manager();
+            quotaManager.addRule({
+                limit: 1,
+                throttling: 'limit-absolute',
+                resource: 'res1'
+            });
+            quotaManager.addRule({
+                limit: 1,
+                throttling: 'limit-absolute',
+                resource: 'res2'
+            });
+
+            var quotaServer = new quota.Server();
+            quotaServer.addManager('test', quotaManager);
+
+            var quotaClient = new quota.Client(quotaServer);
+
+            return quotaClient.requestQuota('test')
+                .then(function () {
+                    throw new Error('Expected Error');
+                })
+                .catch(function (err) {
                     return; // Expected
                 });
 
