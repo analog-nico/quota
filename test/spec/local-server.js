@@ -126,11 +126,11 @@ describe('Local Server', function () {
 
         });
 
-        it('with 1 rule and scope parameter variants', function () {
+        it('should reject not properly set scope parameters', function () {
 
             var quotaManager = new quota.Manager();
             quotaManager.addRule({
-                limit: 2,
+                limit: 1,
                 throttling: 'limit-absolute',
                 scope: 'id'
             });
@@ -140,24 +140,37 @@ describe('Local Server', function () {
 
             var quotaClient = new quota.Client(quotaServer);
 
-            return BPromise.resolve()
-                .then(function () {
-                    return quotaClient.requestQuota('test', undefined);
-                })
-                .then(function () {
-                    return quotaClient.requestQuota('test', { });
-                })
-                .then(function () {
-
-                    return quotaClient.requestQuota('test', { id: undefined })
-                        .then(function () {
-                            throw new Error('Expected OutOfQuotaError');
-                        })
-                        .catch(quota.OutOfQuotaError, function (err) {
-                            return; // Expected
-                        });
-
-                });
+            return BPromise.all([
+                quotaClient.requestQuota('test', undefined)
+                    .then(function () {
+                        throw new Error('Expected scope error');
+                    })
+                    .catch(function (err) {
+                        expect(err.message).to.eql('Please pass a value for the "id" scope with your quota request');
+                    }),
+                quotaClient.requestQuota('test', { })
+                    .then(function () {
+                        throw new Error('Expected scope error');
+                    })
+                    .catch(function (err) {
+                        expect(err.message).to.eql('Please pass a value for the "id" scope with your quota request');
+                    }),
+                quotaClient.requestQuota('test', { id: undefined })
+                    .then(function () {
+                        throw new Error('Expected scope error');
+                    })
+                    .catch(function (err) {
+                        expect(err.message).to.eql('Please pass a value for the "id" scope with your quota request');
+                    }),
+                quotaClient.requestQuota('test', { id: null }),
+                quotaClient.requestQuota('test', { id: 'null' })
+                    .then(function () {
+                        throw new Error('Expected OutOfQuotaError');
+                    })
+                    .catch(quota.OutOfQuotaError, function (err) {
+                        return; // Expected
+                    })
+            ]);
 
         });
 
@@ -186,7 +199,7 @@ describe('Local Server', function () {
                     return quotaClient.requestQuota('test', { id: 2, id2: 1 });
                 })
                 .then(function () {
-                    return quotaClient.requestQuota('test', { id: 1 });
+                    return quotaClient.requestQuota('test', { id: 1, id2: null });
                 })
                 .then(function () {
 
@@ -223,7 +236,7 @@ describe('Local Server', function () {
                 })
                 .then(function () {
 
-                    return quotaClient.requestQuota('test', { id: 1 })
+                    return quotaClient.requestQuota('test', { id: 1, id2: null })
                         .then(function () {
                             throw new Error('Expected OutOfQuotaError');
                         })

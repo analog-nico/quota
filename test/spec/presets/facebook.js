@@ -64,11 +64,11 @@ describe('Preset Facebook', function () {
         var quotaClient = new quota.Client(quotaServer);
 
         return BPromise.all([
-            quotaClient.requestQuota('facebook', {}, { budgetChange: 1 }),
-            quotaClient.requestQuota('facebook', {}, { budgetChange: 1 }),
-            quotaClient.requestQuota('facebook', {}, { budgetChange: 1 }),
-            quotaClient.requestQuota('facebook', {}, { budgetChange: 1 }),
-            quotaClient.requestQuota('facebook', {}, { budgetChange: 1 }, { maxWait: 0 })
+            quotaClient.requestQuota('facebook', { adSetId: 1 }, { budgetChange: 1 }),
+            quotaClient.requestQuota('facebook', { adSetId: 1 }, { budgetChange: 1 }),
+            quotaClient.requestQuota('facebook', { adSetId: 1 }, { budgetChange: 1 }),
+            quotaClient.requestQuota('facebook', { adSetId: 1 }, { budgetChange: 1 }),
+            quotaClient.requestQuota('facebook', { adSetId: 1 }, { budgetChange: 1 }, { maxWait: 0 })
                 .then(function () {
                     throw new Error('Expected OutOfQuotaError');
                 })
