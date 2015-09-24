@@ -141,6 +141,9 @@ If you want to debug a test you should use `gulp test-without-coverage` to run a
 
 ## Change History
 
+- v0.0.3 (2015-09-24)
+    - Tested and improved the presets
+    - Improved overall error handling
 - v0.0.2 (2015-09-22)
     - Fixed race condition that may render the `maxWait` option ineffective
 - v0.0.1 (2015-09-21)

@@ -1,6 +1,6 @@
 {
   "name": "quota",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Sophisticated, general-purpose quota management",
   "keywords": [
     "quota",
