@@ -150,7 +150,7 @@ describe('Throttling WindowSliding', function () {
                     });
 
             })
-            .delay(5)
+            .delay(6)
             .then(function () {
 
                 return quotaClient.requestQuota('test', undefined, 2);
