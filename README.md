@@ -20,19 +20,19 @@ Whereever you need to **respect or enforce quota limits** this library can help:
 - You can **respect** the quota limits if you **e.g. call the Twitter API**. For Twitter and many other well-known API providers this library ships presets that mirror the quota limits of the API provider. This way your code will know if quota is left or how long to wait until more quota gets available without calling the provider's API that would respond with an error. Internal queueing, prioritizing, and backoff mechanisms allow using the available quota to a maximum extend without risking being categorized as abusive by the API provider.
 - You can **enforce** quota limits **e.g. for your own API that you provide** using custom API call rate limits - simple to very sophisticated - or even **e.g. in office applications that limit the number of pages to print each month**.
 
-Respecting quota limits when calling an API is the most common use case and therefore Quota ships with the following [presets](tree/master/lib/server/core/presets):
+Respecting quota limits when calling an API is the most common use case and therefore Quota ships with the following [presets](lib/server/core/presets):
 
-- [Bitly](tree/master/lib/server/core/presets/bitly.js)
-- [Echonest](tree/master/lib/server/core/presets/echonest.js)
-- [Facebook](tree/master/lib/server/core/presets/facebook.js)
-- [GitHub](tree/master/lib/server/core/presets/github.js)
-- [Google Analytics](tree/master/lib/server/core/presets/google-analytics.js)
-- [Google+](tree/master/lib/server/core/presets/google-plus.js)
-- [Instagram](tree/master/lib/server/core/presets/instagram.js)
-- [MailChimp](tree/master/lib/server/core/presets/mailchimp.js)
-- [StackExchange](tree/master/lib/server/core/presets/stackexchange.js)
-- [Twitter](tree/master/lib/server/core/presets/twitter.js)
-- [YouTube](tree/master/lib/server/core/presets/youtube.js)
+- [Bitly](lib/server/core/presets/bitly.js)
+- [Echonest](lib/server/core/presets/echonest.js)
+- [Facebook](lib/server/core/presets/facebook.js)
+- [GitHub](lib/server/core/presets/github.js)
+- [Google Analytics](lib/server/core/presets/google-analytics.js)
+- [Google+](lib/server/core/presets/google-plus.js)
+- [Instagram](lib/server/core/presets/instagram.js)
+- [MailChimp](lib/server/core/presets/mailchimp.js)
+- [StackExchange](lib/server/core/presets/stackexchange.js)
+- [Twitter](lib/server/core/presets/twitter.js)
+- [YouTube](lib/server/core/presets/youtube.js)
 
 ## Examples for the Overall Setup and Use
 
