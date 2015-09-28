@@ -34,6 +34,8 @@ Respecting quota limits when calling an API is the most common use case and ther
 - [Twitter](lib/server/core/presets/twitter.js)
 - [YouTube](lib/server/core/presets/youtube.js)
 
+These presets completely replicate the quota rules as specified by the API providers. This includes throttling and queueing `.requestQuota(...)` calls (see below) as well as an appropriate backoff mechanism that intervenes in case the API provider starts rejecting requests - which would be unexpected though.
+
 ## Examples for the Overall Setup and Use
 
 ### Quota for 1 API on a single node.js instance
@@ -57,7 +59,7 @@ quotaClient.requestQuota('github', { userId: 'analog-nico' }, { requests: 1 }, {
 		grant.dismiss();
 	})
 	.catch(quota.OutOfQuotaError, function (err) {
-		// The quota request was denied. Even after 5 seconds no quota was available.
+		// The quota request was denied. Even after 5 seconds no quota became available.
 		// E.g. notify the user to try again later.
 	})
 	.catch(function (err) {
@@ -144,6 +146,14 @@ var quotaClient = new quota.Client([ quotaServer, process.env.QUOTA_SERVER_URL ]
 quotaClient.requestQuota('google-analytics', /* ... */ ).then(function (grant) { /* ... */ });
 quotaClient.requestQuota('bitly', /* ... */ ).then(function (grant) { /* ... */ });
 ```
+
+## `.requestQuota(...)` Parameters
+
+Description forthcoming.
+
+## `grant.dismiss(...)` Parameters
+
+Description forthcoming.
 
 ## Configuring Custom Quota Limits
 
