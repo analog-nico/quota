@@ -27,7 +27,8 @@
   "dependencies": {
     "bluebird": "^2.10",
     "double-ended-queue": "2.1.0-0",
-    "lodash": "^3.10"
+    "lodash": "^3.10",
+    "moment": "^2.10.6"
   },
   "engines": {
     "node": ">=0.10.0"
