@@ -20,7 +20,21 @@ Whereever you need to **respect or enforce quota limits** this library can help:
 - You can **respect** the quota limits if you **e.g. call the Twitter API**. For Twitter and many other well-known API providers this library ships presets that mirror the quota limits of the API provider. This way your code will know if quota is left or how long to wait until more quota gets available without calling the provider's API that would respond with an error. Internal queueing, prioritizing, and backoff mechanisms allow using the available quota to a maximum extend without risking being categorized as abusive by the API provider.
 - You can **enforce** quota limits **e.g. for your own API that you provide** using custom API call rate limits - simple to very sophisticated - or even **e.g. in office applications that limit the number of pages to print each month**.
 
-## Examples
+Respecting quota limits when calling an API is the most common use case and therefore Quota ships with the following [presets](tree/master/lib/server/core/presets):
+
+- [Bitly](tree/master/lib/server/core/presets/bitly.js)
+- [Echonest](tree/master/lib/server/core/presets/echonest.js)
+- [Facebook](tree/master/lib/server/core/presets/facebook.js)
+- [GitHub](tree/master/lib/server/core/presets/github.js)
+- [Google Analytics](tree/master/lib/server/core/presets/google-analytics.js)
+- [Google+](tree/master/lib/server/core/presets/google-plus.js)
+- [Instagram](tree/master/lib/server/core/presets/instagram.js)
+- [MailChimp](tree/master/lib/server/core/presets/mailchimp.js)
+- [StackExchange](tree/master/lib/server/core/presets/stackexchange.js)
+- [Twitter](tree/master/lib/server/core/presets/twitter.js)
+- [YouTube](tree/master/lib/server/core/presets/youtube.js)
+
+## Examples for the Overall Setup and Use
 
 ### Quota for 1 API on a single node.js instance
 
@@ -35,17 +49,23 @@ quotaServer.addManager('github'); // This is loading one of many presets.
 var quotaClient = new quota.Client(quotaServer);
 
 // Requesting quota for a single GitHub API call on behalf of the analog-nico user.
-quotaClient.requestQuota('github', { userId: 'analog-nico' })
+quotaClient.requestQuota('github', { userId: 'analog-nico' }, { requests: 1 }, { maxWait: 5000 })
+	// The request is queued up to 5 seconds if no quota is available right away.
 	.then(function (grant) {
 		// The quota request was granted. Call the GitHub API now.
+		// And afterwards tell Quota that the GitHub API call is finished.
+		grant.dismiss();
 	})
 	.catch(quota.OutOfQuotaError, function (err) {
-		// The quota request was denied. E.g. notify the user to try again later.
+		// The quota request was denied. Even after 5 seconds no quota was available.
+		// E.g. notify the user to try again later.
 	})
 	.catch(function (err) {
 		// Due to technical reasons the quota request was neither granted nor denied. E.g. notify the admins.
 	});
 ```
+
+Please refer to the particular preset you use for details about the parameters required to call `.requestQuota(...)` and `grant.dismiss(...)`.
 
 ### Quota for multiple APIs on a single node.js instance
 
@@ -55,7 +75,7 @@ var quota = require('quota');
 // Create and configure the quota server which manages the quota usage.
 var quotaServer = new quota.Server();
 quotaServer.addManager('twitter'); // This is loading one of many presets.
-quotaServer.addManager('xyzApi', { /* options that define custom quota limits */ });
+quotaServer.addManager('xyzApi', myCustomQuotaManager);
 
 // Create a client connected to the server locally - so no overhead involved.
 var quotaClient = new quota.Client(quotaServer);
@@ -124,6 +144,12 @@ var quotaClient = new quota.Client([ quotaServer, process.env.QUOTA_SERVER_URL ]
 quotaClient.requestQuota('google-analytics', /* ... */ ).then(function (grant) { /* ... */ });
 quotaClient.requestQuota('bitly', /* ... */ ).then(function (grant) { /* ... */ });
 ```
+
+## Configuring Custom Quota Limits
+
+If a preset for a certain API is not available or custom quota limits need to be enforced you can use the same API that the presets use.
+
+Description forthcoming.
 
 ## Contributing
 
