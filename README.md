@@ -30,6 +30,7 @@ Respecting quota limits when calling an API is the most common use case and ther
 - [Google+](lib/server/core/presets/google-plus.js)
 - [Instagram](lib/server/core/presets/instagram.js)
 - [MailChimp](lib/server/core/presets/mailchimp.js)
+- [Pinterest](lib/server/core/presets/pinterest.js)
 - [StackExchange](lib/server/core/presets/stackexchange.js)
 - [Twitter](lib/server/core/presets/twitter.js)
 - [YouTube](lib/server/core/presets/youtube.js)
