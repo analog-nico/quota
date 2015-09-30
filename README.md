@@ -178,6 +178,8 @@ If you want to debug a test you should use `gulp test-without-coverage` to run a
 
 ## Change History
 
+- v0.0.5 (2015-09-30)
+    - Added Pinterest preset
 - v0.0.4 (2015-09-28)
     - Implemented window-fixed throttling which is needed for the Google APIs
     - Extended all other throttling modules
