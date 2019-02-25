@@ -3,7 +3,6 @@
 var quota = require('../../../lib/index.js');
 
 var _ = require('lodash');
-var BPromise = require('bluebird');
 
 
 describe('Preset Google Analytics', function () {
@@ -17,7 +16,7 @@ describe('Preset Google Analytics', function () {
 
         var quotaClient = new quota.Client(quotaServer);
 
-        return BPromise.all([
+        return Promise.all([
             quotaClient.requestQuota('google-analytics', { viewId: 123 }, undefined, { maxWait: 0 }),
             quotaClient.requestQuota('google-analytics', { viewId: 123 }, undefined, { maxWait: 0 })
                 .then(function () {

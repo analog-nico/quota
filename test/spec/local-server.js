@@ -1,10 +1,7 @@
 'use strict';
+const _ = require('lodash');
 
-var quota = require('../../lib/index.js');
-
-var _ = require('lodash');
-var BPromise = require('bluebird');
-
+const quota = require('../../lib/index.js');
 
 describe('Local Server', function () {
 
@@ -23,14 +20,11 @@ describe('Local Server', function () {
 
             var quotaClient = new quota.Client(quotaServer);
 
-            return BPromise.resolve()
+            return Promise.resolve()
                 .then(function () {
-
                     return quotaClient.requestQuota('test');
-
                 })
                 .then(function () {
-
                     return quotaClient.requestQuota('test')
                         .then(function () {
                             throw new Error('Expected OutOfQuotaError');
@@ -60,7 +54,7 @@ describe('Local Server', function () {
 
             var quotaClient = new quota.Client(quotaServer);
 
-            return BPromise.resolve()
+            return Promise.resolve()
                 .then(function () {
 
                     return quotaClient.requestQuota('test');
@@ -94,7 +88,7 @@ describe('Local Server', function () {
 
             var quotaClient = new quota.Client(quotaServer);
 
-            return BPromise.resolve()
+            return Promise.resolve()
                 .then(function () {
                     return quotaClient.requestQuota('test', { id: 1, notRelevant: true });
                 })
@@ -140,7 +134,7 @@ describe('Local Server', function () {
 
             var quotaClient = new quota.Client(quotaServer);
 
-            return BPromise.all([
+            return Promise.all([
                 quotaClient.requestQuota('test', undefined)
                     .then(function () {
                         throw new Error('Expected scope error');
@@ -188,7 +182,7 @@ describe('Local Server', function () {
 
             var quotaClient = new quota.Client(quotaServer);
 
-            return BPromise.resolve()
+            return Promise.resolve()
                 .then(function () {
                     return quotaClient.requestQuota('test', { id: 1, id2: 1 });
                 })
@@ -271,7 +265,7 @@ describe('Local Server', function () {
 
             var quotaClient = new quota.Client(quotaServer);
 
-            return BPromise.resolve()
+            return Promise.resolve()
                 .then(function () {
                     return quotaClient.requestQuota('test', { id: 1, id2: 1 });
                 })
@@ -326,7 +320,7 @@ describe('Local Server', function () {
 
             var quotaClient = new quota.Client(quotaServer);
 
-            return BPromise.resolve()
+            return Promise.resolve()
                 .then(function () {
                     return quotaClient.requestQuota('test', { id: 1, id2: 1 });
                 })
@@ -381,7 +375,7 @@ describe('Local Server', function () {
 
             var quotaClient = new quota.Client(quotaServer);
 
-            return BPromise.resolve()
+            return Promise.resolve()
                 .then(function () {
                     return quotaClient.requestQuota('test', { id: 1, id2: 1 });
                 })
@@ -432,7 +426,7 @@ describe('Local Server', function () {
 
             var quotaClient = new quota.Client(quotaServer);
 
-            return BPromise.resolve()
+            return Promise.resolve()
                 .then(function () {
                     return quotaClient.requestQuota('test', undefined, { 'resA': 1 });
                 })
@@ -483,7 +477,7 @@ describe('Local Server', function () {
 
             var quotaClient = new quota.Client(quotaServer);
 
-            return BPromise.resolve()
+            return Promise.resolve()
                 .then(function () {
                     return quotaClient.requestQuota('test', undefined, { 'resA': 1, 'resB': 1 });
                 })
@@ -541,7 +535,7 @@ describe('Local Server', function () {
 
             var quotaClient = new quota.Client(quotaServer);
 
-            return BPromise.resolve()
+            return Promise.resolve()
                 .then(function () {
                     return quotaClient.requestQuota('test', undefined, { 'resA': 1 });
                 })
@@ -671,7 +665,7 @@ describe('Local Server', function () {
 
             var quotaClient = new quota.Client(quotaServer);
 
-            return BPromise.resolve()
+            return Promise.resolve()
                 .then(function () {
                     return quotaClient.requestQuota('man1');
                 })
@@ -713,7 +707,7 @@ describe('Local Server', function () {
 
             var quotaClient = new quota.Client(quotaServer);
 
-            return BPromise.resolve()
+            return Promise.resolve()
                 .then(function () {
                     return quotaClient.requestQuota('man1');
                 })

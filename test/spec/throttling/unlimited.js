@@ -3,7 +3,6 @@
 var quota = require('../../../lib/index.js');
 
 var _ = require('lodash');
-var BPromise = require('bluebird');
 
 
 describe('Throttling Unlimited', function () {
@@ -20,7 +19,7 @@ describe('Throttling Unlimited', function () {
 
         var quotaClient = new quota.Client(quotaServer);
 
-        return BPromise.resolve()
+        return Promise.resolve()
             .then(function () {
 
                 return quotaClient.requestQuota('test');

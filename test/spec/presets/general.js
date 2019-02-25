@@ -3,7 +3,6 @@
 var quota = require('../../../lib/index.js');
 
 var _ = require('lodash');
-var BPromise = require('bluebird');
 
 
 describe('Loading presets', function () {
@@ -20,7 +19,7 @@ describe('Loading presets', function () {
 
         var quotaClient = new quota.Client(quotaServer);
 
-        return BPromise.all([
+        return Promise.all([
             quotaClient.requestQuota('bitly1', {}, { requests:5 }, { maxWait: 0 }),
             quotaClient.requestQuota('bitly1', {}, { requests:5 }, { maxWait: 0 })
                 .then(function () {

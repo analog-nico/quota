@@ -3,7 +3,6 @@
 var quota = require('../../../lib/index.js');
 
 var _ = require('lodash');
-var BPromise = require('bluebird');
 
 
 describe('Preset Facebook', function () {
@@ -15,7 +14,7 @@ describe('Preset Facebook', function () {
 
         var quotaClient = new quota.Client(quotaServer);
 
-        return BPromise.all([
+        return Promise.all([
             quotaClient.requestQuota('facebook'),
             quotaClient.requestQuota('facebook'),
             quotaClient.requestQuota('facebook'),
@@ -39,7 +38,7 @@ describe('Preset Facebook', function () {
 
         var quotaClient = new quota.Client(quotaServer);
 
-        return BPromise.all([
+        return Promise.all([
             quotaClient.requestQuota('facebook', {}, { requests: 999 }),
             quotaClient.requestQuota('facebook', {}, { requests: 999 }),
             quotaClient.requestQuota('facebook', {}, { requests: 999 }),
@@ -63,7 +62,7 @@ describe('Preset Facebook', function () {
 
         var quotaClient = new quota.Client(quotaServer);
 
-        return BPromise.all([
+        return Promise.all([
             quotaClient.requestQuota('facebook', { adSetId: 1 }, { budgetChange: 1 }),
             quotaClient.requestQuota('facebook', { adSetId: 1 }, { budgetChange: 1 }),
             quotaClient.requestQuota('facebook', { adSetId: 1 }, { budgetChange: 1 }),

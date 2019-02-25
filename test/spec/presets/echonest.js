@@ -3,7 +3,6 @@
 var quota = require('../../../lib/index.js');
 
 var _ = require('lodash');
-var BPromise = require('bluebird');
 
 
 describe('Preset Echonest', function () {
@@ -15,7 +14,7 @@ describe('Preset Echonest', function () {
 
         var quotaClient = new quota.Client(quotaServer);
 
-        return BPromise.resolve()
+        return Promise.resolve()
             .then(function () {
 
                 return quotaClient.requestQuota('echonest')
@@ -59,7 +58,7 @@ describe('Preset Echonest', function () {
 
         var quotaClient = new quota.Client(quotaServer);
 
-        return BPromise.resolve()
+        return Promise.resolve()
             .then(function () {
 
                 return quotaClient.requestQuota('echonest')
@@ -76,7 +75,7 @@ describe('Preset Echonest', function () {
             })
             .then(function () {
 
-                return BPromise.all([
+                return Promise.all([
                     quotaClient.requestQuota('echonest')
                         .then(function (grant) {
                             grant.dismiss({

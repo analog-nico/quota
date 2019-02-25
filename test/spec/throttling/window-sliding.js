@@ -1,10 +1,8 @@
 'use strict';
 
-var quota = require('../../../lib/index.js');
+const _ = require('lodash');
 
-var _ = require('lodash');
-var BPromise = require('bluebird');
-
+const quota = require('../../../lib');
 
 describe('Throttling WindowSliding', function () {
 
@@ -74,7 +72,7 @@ describe('Throttling WindowSliding', function () {
 
         var quotaClient = new quota.Client(quotaServer);
 
-        return BPromise.resolve()
+        return Promise.resolve()
             .then(function () {
 
                 return quotaClient.requestQuota('test');
@@ -115,7 +113,7 @@ describe('Throttling WindowSliding', function () {
 
         var quotaClient = new quota.Client(quotaServer);
 
-        return BPromise.resolve()
+        return Promise.resolve()
             .then(function () {
 
                 return quotaClient.requestQuota('test');

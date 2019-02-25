@@ -1,10 +1,7 @@
 'use strict';
+const _ = require('lodash');
 
-var quota = require('../../lib/index.js');
-
-var _ = require('lodash');
-var BPromise = require('bluebird');
-
+const quota = require('../../lib/index.js');
 
 describe('Multiple Servers', function () {
 
@@ -83,7 +80,7 @@ describe('Multiple Servers', function () {
 
             var quotaClient = new quota.Client([quotaServer1, quotaServer2]);
 
-            return BPromise.resolve()
+            return Promise.resolve()
                 .then(function () {
                     return quotaClient.requestQuota('server1');
                 })

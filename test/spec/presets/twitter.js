@@ -3,7 +3,6 @@
 var quota = require('../../../lib/index.js');
 
 var _ = require('lodash');
-var BPromise = require('bluebird');
 
 
 describe('Preset Twitter', function () {
@@ -15,7 +14,7 @@ describe('Preset Twitter', function () {
 
         var quotaClient = new quota.Client(quotaServer);
 
-        return BPromise.all([
+        return Promise.all([
             quotaClient.requestQuota('twitter', { userId: 1 }, { 'account/settings': 15 }, { maxWait: 0 }),
             quotaClient.requestQuota('twitter', { userId: 1 }, { 'account/settings': 15 }, { maxWait: 0 })
                 .then(function () {

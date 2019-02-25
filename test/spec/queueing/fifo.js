@@ -3,7 +3,6 @@
 var quota = require('../../../lib/index.js');
 
 var _ = require('lodash');
-var BPromise = require('bluebird');
 
 
 describe('Queueing Fifo', function () {
@@ -22,7 +21,7 @@ describe('Queueing Fifo', function () {
 
         var quotaClient = new quota.Client(quotaServer);
 
-        return BPromise.resolve()
+        return Promise.resolve()
             .then(function () {
 
                 return quotaClient.requestQuota('test')
@@ -62,7 +61,7 @@ describe('Queueing Fifo', function () {
 
         var grant1, grant2, counter = 0;
 
-        return BPromise.resolve()
+        return Promise.resolve()
             .then(function () {
 
                 return quotaClient.requestQuota('test')
@@ -85,7 +84,7 @@ describe('Queueing Fifo', function () {
                     grant1.dismiss();
                 }, 10);
 
-                return BPromise.all([
+                return Promise.all([
                     quotaClient.requestQuota('test')
                         .then(function (grant) {
                             counter += 1;
@@ -130,7 +129,7 @@ describe('Queueing Fifo', function () {
 
         var grant1, grant2, counter = 0;
 
-        return BPromise.resolve()
+        return Promise.resolve()
             .then(function () {
 
                 return quotaClient.requestQuota('test', undefined, { res1: 1 })
@@ -159,7 +158,7 @@ describe('Queueing Fifo', function () {
                     grant2.dismiss();
                 }, 20);
 
-                return BPromise.all([
+                return Promise.all([
                     quotaClient.requestQuota('test', undefined, { res1: 1, res2: 1 })
                         .then(function (grant) {
                             counter += 1;
@@ -194,7 +193,7 @@ describe('Queueing Fifo', function () {
 
         var grant1, counter = 0;
 
-        return BPromise.resolve()
+        return Promise.resolve()
             .then(function () {
 
                 return quotaClient.requestQuota('test', undefined, 0.5)
@@ -210,7 +209,7 @@ describe('Queueing Fifo', function () {
                     grant1.dismiss();
                 }, 10);
 
-                return BPromise.all([
+                return Promise.all([
                     quotaClient.requestQuota('test', undefined, 1)
                         .then(function (grant) {
                             counter += 1;
@@ -245,7 +244,7 @@ describe('Queueing Fifo', function () {
 
         var counter = 0;
 
-        return BPromise.all([
+        return Promise.all([
             quotaClient.requestQuota('test'),
             quotaClient.requestQuota('test'),
             quotaClient.requestQuota('test')
@@ -267,7 +266,7 @@ describe('Queueing Fifo', function () {
                     grant2.dismiss();
                 }, 10);
 
-                return BPromise.all([
+                return Promise.all([
                     quotaClient.requestQuota('test', undefined, 2, { maxWait: 10 })
                         .then(function (grant) {
                             counter += 1;
@@ -300,7 +299,7 @@ describe('Queueing Fifo', function () {
 
         var quotaClient = new quota.Client(quotaServer);
 
-        return BPromise.resolve()
+        return Promise.resolve()
             .then(function () {
 
                 return quotaClient.requestQuota('test', undefined, 2)
@@ -315,7 +314,7 @@ describe('Queueing Fifo', function () {
                     firstGrant.dismiss();
                 });
 
-                return BPromise.all([
+                return Promise.all([
                     quotaClient.requestQuota('test', undefined, undefined, { maxWait: 10 }),
                     quotaClient.requestQuota('test', undefined, undefined, { maxWait: 10 }),
                     quotaClient.requestQuota('test', undefined, undefined, { maxWait: 10 })
@@ -347,7 +346,7 @@ describe('Queueing Fifo', function () {
 
         var grant1, counter = 0;
 
-        return BPromise.resolve()
+        return Promise.resolve()
             .then(function () {
 
                 return quotaClient.requestQuota('test')
@@ -363,7 +362,7 @@ describe('Queueing Fifo', function () {
                     grant1.dismiss();
                 }, 10);
 
-                return BPromise.all([
+                return Promise.all([
                     quotaClient.requestQuota('test', undefined, 2, { maxWait: 5 })
                         .then(function () {
                             throw new Error('Expected OutOfQuotaError');

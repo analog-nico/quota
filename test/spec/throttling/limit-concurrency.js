@@ -3,7 +3,6 @@
 var quota = require('../../../lib/index.js');
 
 var _ = require('lodash');
-var BPromise = require('bluebird');
 
 
 describe('Throttling LimitConcurrency', function () {
@@ -46,7 +45,7 @@ describe('Throttling LimitConcurrency', function () {
 
         var quotaClient = new quota.Client(quotaServer);
 
-        return BPromise.resolve()
+        return Promise.resolve()
             .then(function () {
 
                 return quotaClient.requestQuota('test')
@@ -98,7 +97,7 @@ describe('Throttling LimitConcurrency', function () {
 
         var quotaClient = new quota.Client(quotaServer);
 
-        return BPromise.resolve()
+        return Promise.resolve()
             .then(function () {
 
                 return quotaClient.requestQuota('test', undefined, 2)
@@ -177,7 +176,7 @@ describe('Throttling LimitConcurrency', function () {
 
         var _grant;
 
-        return BPromise.resolve()
+        return Promise.resolve()
             .then(function () {
 
                 return quotaClient.requestQuota('test')
@@ -235,7 +234,7 @@ describe('Throttling LimitConcurrency', function () {
 
         var quotaClient = new quota.Client(quotaServer);
 
-        return BPromise.resolve()
+        return Promise.resolve()
             .then(function () {
 
                 return quotaClient.requestQuota('test')

@@ -3,7 +3,6 @@
 var quota = require('../../../lib/index.js');
 
 var _ = require('lodash');
-var BPromise = require('bluebird');
 
 
 describe('Queueing with maxWait', function () {
@@ -22,7 +21,7 @@ describe('Queueing with maxWait', function () {
 
         var quotaClient = new quota.Client(quotaServer);
 
-        return BPromise.resolve()
+        return Promise.resolve()
             .then(function () {
 
                 return quotaClient.requestQuota('test')
@@ -63,7 +62,7 @@ describe('Queueing with maxWait', function () {
 
         var quotaClient = new quota.Client(quotaServer);
 
-        return BPromise.resolve()
+        return Promise.resolve()
             .then(function () {
 
                 return quotaClient.requestQuota('test')
@@ -78,7 +77,7 @@ describe('Queueing with maxWait', function () {
                     firstGrant.dismiss();
                 }, 10);
 
-                return BPromise.all([
+                return Promise.all([
                     quotaClient.requestQuota('test', undefined, undefined, { maxWait: 0 })
                         .then(function () {
                             throw new Error('Expected OutOfQuotaError');
@@ -120,7 +119,7 @@ describe('Queueing with maxWait', function () {
 
         var counter = 0;
 
-        return BPromise.resolve()
+        return Promise.resolve()
             .then(function () {
 
                 return quotaClient.requestQuota('test')
@@ -140,7 +139,7 @@ describe('Queueing with maxWait', function () {
                     firstGrant.dismiss();
                 }, 10);
 
-                return BPromise.all([
+                return Promise.all([
                     quotaClient.requestQuota('test', undefined, undefined, { maxWait: 0 })
                         .then(function () {
                             throw new Error('Expected OutOfQuotaError');
