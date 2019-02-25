@@ -40,4 +40,4 @@
 
     client.dispose();
     io.close();
-})()
+})().catch(console.error);
