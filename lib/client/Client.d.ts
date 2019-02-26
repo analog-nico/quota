@@ -1,5 +1,6 @@
 import Manager from "../core/Manager";
 import Server from "../server/Server";
+import Grant from "../common/Grant";
 import SocketIO from "socket.io";
 
 declare class Client {
