@@ -5,15 +5,9 @@
     const quota = require('../lib');
 
     const server = new quota.Server();
-    const manager = new quota.Manager();
-    manager.addRule(new quota.Rule({
-        limit: 1,
-        window: 1000,
-        throttling: 'window-sliding',
-        queueing: 'fifo',
-        resource: 'requests'
-    }));
-    server.addManager('ga', manager);
+    server.addManager('ga', {
+        preset: 'google-analytics'
+    });
     server.attachIo(io);
 
     const client = new quota.Client('http://localhost:3030');
@@ -23,8 +17,6 @@
             viewId: 1234
         }, {
             requests: 1
-        }, {
-            maxWait: Infinity
         });
         grant.dismiss();
 
