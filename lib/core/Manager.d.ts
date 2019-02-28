@@ -3,10 +3,19 @@ import Rule from "./Rule";
 
 declare class Manager {
     /**
+     * Creates a new manager and if supplied, inherits the rules
+     * of another manager.
+     */
+    constructor(options?: {
+        backoff?: string
+    }, manager?: Manager);
+
+    /**
      * Adds the rule to this manager.
      */
     addRule(options: {
         window: number,
+        limit: number,
         throttling: string | {
             type: string,
             getStartOfNextWindow: () => number
@@ -15,7 +24,6 @@ declare class Manager {
             type: string
         },
         name?: string,
-        limit: number,
         scope?: string | string[],
         resource?: number
     }): Rule;

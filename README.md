@@ -42,29 +42,30 @@ These presets completely replicate the quota rules as specified by the API provi
 ### Quota for 1 API on a single node.js instance
 
 ``` js
-var quota = require('quota');
+const quota = require('quota');
 
 // Create and configure the quota server which manages the quota usage.
-var quotaServer = new quota.Server();
+const quotaServer = new quota.Server();
 quotaServer.addManager('github'); // This is loading one of many presets.
 
 // Create a client connected to the server locally - so no overhead involved.
-var quotaClient = new quota.Client(quotaServer);
+const quotaClient = new quota.Client(quotaServer);
 
 // Requesting quota for a single GitHub API call on behalf of the analog-nico user.
 quotaClient.requestQuota('github', { userId: 'analog-nico' }, { requests: 1 }, { maxWait: 5000 })
 	// The request is queued up to 5 seconds if no quota is available right away.
-	.then(function (grant) {
+	.then(grant => {
 		// The quota request was granted. Call the GitHub API now.
 		// And afterwards tell Quota that the GitHub API call is finished.
 		grant.dismiss();
 	})
-	.catch(quota.OutOfQuotaError, function (err) {
-		// The quota request was denied. Even after 5 seconds no quota became available.
-		// E.g. notify the user to try again later.
-	})
 	.catch(function (err) {
-		// Due to technical reasons the quota request was neither granted nor denied. E.g. notify the admins.
+		if(err instanceof quota.OutOfQuotaError) {
+			// The quota request was denied. Even after 5 seconds no quota became available.
+			// E.g. notify the user to try again later.
+		} else {
+			// Due to technical reasons the quota request was neither granted nor denied. E.g. notify the admins.
+		}
 	});
 ```
 
@@ -73,46 +74,42 @@ Please refer to the particular preset you use for details about the parameters r
 ### Quota for multiple APIs on a single node.js instance
 
 ``` js
-var quota = require('quota');
+const quota = require('quota');
 
 // Create and configure the quota server which manages the quota usage.
-var quotaServer = new quota.Server();
+const quotaServer = new quota.Server();
 quotaServer.addManager('twitter'); // This is loading one of many presets.
 quotaServer.addManager('xyzApi', myCustomQuotaManager);
 
 // Create a client connected to the server locally - so no overhead involved.
-var quotaClient = new quota.Client(quotaServer);
+const quotaClient = new quota.Client(quotaServer);
 
 // You may now request the quota from each manager as needed.
-quotaClient.requestQuota('twitter', /* ... */ ).then(function (grant) { /* ... */ });
-quotaClient.requestQuota('xyzApi', /* ... */ ).then(function (grant) { /* ... */ });
+quotaClient.requestQuota('twitter', /* ... */ )
+	.then(grant => { /* ... */ });
+quotaClient.requestQuota('xyzApi', /* ... */ )
+	.then(grant => { /* ... */ });
 ```
 
 ### Quota management in a cluster environment (multiple node.js instances)
-
-**This is a preview. Feature not yet implemented.**
 
 E.g. the Google Analytics API puts a limit on the overall requests per day. If you have a cluster environment with e.g. 10-20 dynamically scaled node.js instances which all do Google Analytics API calls the quota has to be managed by a single, centralized Quota server. Therefore the Quota Client supports the connection to a remote Quota Server.
 
 Choose one node.js instance to run the Quota Server:
 
 ``` js
-var quota = require('quota');
-var express = require('express');
+const port = 3030;
 
-var quotaServer = new quota.Server();
-quotaServer.addManager('google-analytics'); // This is loading one of many presets.
+const io = require('socket.io')(port);
+const quota = require('quota');
+const express = require('express');
 
-// Expose the server via a REST API
-var app = express();
-quotaServer.exposeRestAPI(app);
-
-var server = app.listen(3000, function () {
-	var host = server.address().address;
-	var port = server.address().port;
-
-	console.log('Connect your Quota Clients to http://%s:%s', host, port);
-});
+const quotaServer = new quota.Server();
+quotaServer.addManager('ga', {
+	preset: 'google-analytics',
+	queriesPerSecond: 5
+}); // This is loading one of many presets.
+quotaServer.attachIo(io);
 ```
 
 Use the following code on all node.js instances that want to request quota:
@@ -121,38 +118,65 @@ Use the following code on all node.js instances that want to request quota:
 var quota = require('quota');
 
 // Create a client connected to the remote server.
-var quotaClient = new quota.Client(process.env.QUOTA_SERVER_URL);
+var quotaClient = new quota.Client('http://localhost:3030');
 
 // You may now request the quota as always.
-quotaClient.requestQuota('google-analytics', /* ... */ ).then(function (grant) { /* ... */ });
+quotaClient.requestQuota('ga', /* ... */ )
+	.then(grant => { /* ... */ });
+
+// request with general rules (equivalent to the above ga):
+quotaClient.requestQuota('ga-general', /* ... */ )
+	.then(grant => { /* ... */ });
+
+// request with core rules:
+quotaClient.requestQuota('ga-core', /* ... */ )
+	.then(grant => { /* ... */ });
 ```
 
 ### Quota management in a cluster environment with local and remote Quota Servers
 
-**This is a preview. Feature not yet implemented.** However, a Client can at least connect to multiple local Servers.
-
 If the quota management is done by a remote Quota Server some overhead is introduced by the Client's REST API calls to the Server. By deploying all node.js instances in the same datacenter this overhead is minimal but can be further reduced by only running those Managers on the remote Quota Server that require centralized management. All other Managers can be moved to a local Quota Server:
 
 ``` js
-var quota = require('quota');
+const quota = require('quota');
 
 // Create and configure the local Quota Server.
-var quotaServer = new quota.Server();
+const quotaServer = new quota.Server();
 quotaServer.addManager('bitly'); // Bitly puts independent limits on each IP address. So local management is sufficient.
 
 // Create a client connected to both the local and the remote Server.
-var quotaClient = new quota.Client([ quotaServer, process.env.QUOTA_SERVER_URL ]);
+const quotaClient = new quota.Client([ quotaServer, process.env.QUOTA_SERVER_URL ]);
 
 // When requesting quota the Client automatically finds the right Quota Server.
-quotaClient.requestQuota('google-analytics', /* ... */ ).then(function (grant) { /* ... */ });
-quotaClient.requestQuota('bitly', /* ... */ ).then(function (grant) { /* ... */ });
+quotaClient.requestQuota('ga', /* ... */ ).then(grant => { /* ... */ });
+quotaClient.requestQuota('bitly', /* ... */ ).then(grant => { /* ... */ });
 ```
 
-## `.requestQuota(...)` Parameters
+## `client.requestQuota(...)` Parameters
+
+```ts
+requestQuota(managerName: string, scope?: {
+	[scopeName: string]: any
+}, resources?: {
+	[resourceName: string]: number
+}, options?: {
+	maxWait?: number
+}): Promise<Grant>;
+```
 
 Description forthcoming.
 
 ## `grant.dismiss(...)` Parameters
+
+```ts
+dismiss(feedback: {
+	forRule: {
+		[ruleName: string]: {
+			limit?: number
+		}
+	}
+}): void;
+```
 
 Description forthcoming.
 
@@ -178,6 +202,20 @@ If you want to debug a test you should use `gulp test-without-coverage` to run a
 
 ## Change History
 
+- v0.0.6 (2019-02-28)
+	- Switched to native `Promise` instead of `bluebird` 
+	- Added TypeScript definitions
+	- Added support for centralized servers (using socket.io)
+	- Switched to classes and ES6 constructs
+	- Preset: `google-analytics` now registers several managers:
+		- `general`
+		- `management`
+		- `provisioning`
+		- `core`
+		- `real-time`
+		- `mcf`
+	- A manager can now inherit rules from another manager
+	- When a preset with multiple managers is registered, a prefix is used to register those managers. Description forthcoming.
 - v0.0.5 (2015-09-30)
     - Added Pinterest preset
 - v0.0.4 (2015-09-28)

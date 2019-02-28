@@ -9,6 +9,10 @@ declare class Server {
      */
     addManager(managerName: string, manager: Manager): void;
 
+    /**
+     * Adds the selected manager to the Server. If a preset is set
+     * or options is not specified, a preset is loaded.
+     */
     addManager(managerName: string, options: {
         preset: 'google-analytics',
         dailyRequests?: number,

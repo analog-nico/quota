@@ -6,14 +6,15 @@
 
     const server = new quota.Server();
     server.addManager('ga', {
-        preset: 'google-analytics'
+        preset: 'google-analytics',
+        queriesPerSecond: 1
     });
     server.attachIo(io);
 
     const client = new quota.Client('http://localhost:3030');
     const start = Date.now();
     for (let i = 0; i < 2; ++i) {
-        const grant = await client.requestQuota('ga', {
+        const grant = await client.requestQuota('ga-core', {
             viewId: 1234
         }, {
             requests: 1

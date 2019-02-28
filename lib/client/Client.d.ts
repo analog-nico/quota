@@ -4,8 +4,22 @@ import Grant from "../common/Grant";
 import SocketIO from "socket.io";
 
 declare class Client {
+    /**
+     * Creates a new Quota Client. The client is responsible
+     * to communicate with different servers: remote and local.
+     *  
+     * @param uri The URI of the server's socket.io
+     */
     constructor(uri: string);
+
+    /**
+     * Creates a new Quota Client. The client is responsible
+     * to communicate with different servers: remote and local.
+     * 
+     * @param server The instance of a Server to be used.
+     */
     constructor(server: Server);
+
     constructor(servers: (string | Server)[]);
 
     /**
@@ -15,8 +29,12 @@ declare class Client {
     addServer(uri: string): void;
 
     /**
+     * Disposes of resources such as open connections
+     */
+    dispose(): Promise<void>;
+
+    /**
      * Request quota
-     * @private
      */
     requestQuota(managerName: string, scope?: {
         [scopeName: string]: any
@@ -25,11 +43,6 @@ declare class Client {
     }, options?: {
         maxWait?: number
     }): Promise<Grant>;
-
-    /**
-     * Disposes of resources such as open connections
-     */
-    dispose(): Promise<void>;
 }
 
 export = Client;
