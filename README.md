@@ -102,23 +102,33 @@ const port = 3030;
 
 const io = require('socket.io')(port);
 const quota = require('quota');
-const express = require('express');
 
 const quotaServer = new quota.Server();
+
+/**
+This is loading one of many presets, and adds the following managers:
+	- ga
+	- ga-general
+	- ga-management
+	- ga-provisioning
+	- ga-core
+	- ga-real-time
+	- ga-mcf
+*/
 quotaServer.addManager('ga', {
 	preset: 'google-analytics',
 	queriesPerSecond: 5
-}); // This is loading one of many presets.
+});
 quotaServer.attachIo(io);
 ```
 
 Use the following code on all node.js instances that want to request quota:
 
 ``` js
-var quota = require('quota');
+const quota = require('quota');
 
 // Create a client connected to the remote server.
-var quotaClient = new quota.Client('http://localhost:3030');
+const quotaClient = new quota.Client('http://localhost:3030');
 
 // You may now request the quota as always.
 quotaClient.requestQuota('ga', /* ... */ )
@@ -199,6 +209,11 @@ To set up your development environment for Quota:
 `gulp dev` watches all source files and if you save some changes it will lint the code and execute all tests. The test coverage report can be viewed from `./coverage/lcov-report/index.html`.
 
 If you want to debug a test you should use `gulp test-without-coverage` to run all tests without obscuring the code by the test coverage instrumentation.
+
+NOTE: Tests are currently not functional anymore:
+	- `.catch` is using the `bluebird` syntax and needs to be updated.
+	- gulp-coveralls is deprecated and has security issues
+	- the tests need to be revamped. I do not have time to work on it.
 
 ## Change History
 
