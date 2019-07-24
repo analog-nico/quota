@@ -1,3 +1,5 @@
+**WARNING**: This repository is currently not maintained.
+
 # Quota
 
 Sophisticated, general-purpose quota management
